@@ -3,9 +3,11 @@ import warnings
 warnings.filterwarnings("ignore")
 
 # Import necessary libraries
-import logging
+import sys
 import gradio as gr
 import requests
+from logger import logging
+from exception import CustomExceptionHandling
 
 
 def describe_image(image, question):
@@ -20,6 +22,13 @@ def describe_image(image, question):
         Generated response from the model.
     """
     try:
+        # Handle the null cases for image and question
+        if not image:
+            gr.Warning("Please upload an image.")
+
+        if not question:
+            question = "Provide a brief description of the given image."
+
         # Save the image to a temporary file
         image_path = "temp_image.jpg"
         image.save(image_path)
@@ -40,9 +49,10 @@ def describe_image(image, question):
         logging.info("Response generated successfully.")
         return response_data["response"]
 
-    # Handle exceptions
+    # Handle exceptions that may occur during answer generation
     except Exception as e:
-        return f"An error occurred: {str(e)}"
+        # Custom exception handling
+        raise CustomExceptionHandling(e, sys) from e
 
 
 # Image, text query for the input
