@@ -172,3 +172,8 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# other
+condaenv*
+scratch*
+*.DS_Store*
